@@ -1,39 +1,55 @@
-const intro = document.querySelector('.intro');
-const video = intro.querySelector('video');
-const text = intro.querySelector('h1');
+const pin = document.querySelector('.pin');
+const canvas = document.getElementById('animationCanvas');
+const context = canvas.getContext('2d');
+const frameCount = 204; // Update this with the total number of frames you have
+let currentFrame = 1;
+const duration = 7000; // Set the duration (in seconds) of the entire animation
+
+// Initialize ScrollMagic controller
+let controller = new ScrollMagic.Controller();
+
+// Create a scene for the trigger area
+let scene = new ScrollMagic.Scene({
+    duration: duration, // Set the duration to match your animation duration (7 seconds)
+    triggerElement: pin,
+    triggerHook: 0,
+}).setPin(pin).addTo(controller); // This will pin the element for the the scene's duration
 
 
-const section = document.querySelector('section');
-const end = section.querySelector('h1');
-
-
-//SCROLLMAGIC
-const controller = new ScrollMagic.Controller();
-
-
-//Scenes
-const scene = new ScrollMagic.Scene({
-    duration: video.duration * 1000, // Set the scene duration to match the video duration in milliseconds
-    triggerElement: intro,
-    triggerHook: 0
-})
-    .setPin(intro)
-    .addTo(controller);
-
-
-//Video Animation
-let accelamount = 0.1;
 let scrollpos = 0;
-let delay = 0;
 
-scene.on('update', e => {
-    scrollpos = e.scrollPos / 1000; // Normalize scrollPos to match video currentTime units (seconds)
+scene.on("update", e => {
+    scrollpos = e.scrollPos;
+    console.log(scrollpos);
 });
 
-setInterval(() => { // Update video currentTime every 33 milliseconds
-    delay += (scrollpos - delay) * accelamount;
-    video.currentTime = delay;
-}, 33.3);
+setInterval(() => {
+    currentFrame = Math.round((scrollpos / 34.5)) + 1;
+    console.log(`current frame should be ${currentFrame}`);
+    if (currentFrame > frameCount) {
+        currentFrame = frameCount;
+    }
+    if (currentFrame < 1) {
+        currentFrame = 1;
+    }
+    animateFrames(currentFrame);
+}, 34.5);
 
-// //Text Animation
-const textAnim = TweenMax.fromTo(text, 3, { opacity: 1 }, { opacity: 0 });
+function animateFrames(currentFrame) {
+    var image = new Image();
+    image.onload = function () {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0);
+    };
+
+    image.src = 'frames/frame_' + currentFrame + '.jpg';
+}
+
+// Resize the canvas to fill the browser window dynamically
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
