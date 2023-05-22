@@ -1,9 +1,9 @@
 const pin = document.querySelector('.pin');
 const canvas = document.getElementById('animationCanvas');
 const context = canvas.getContext('2d');
-const frameCount = 204; // Update this with the total number of frames you have
+const frameCount = 90; // Update this with the total number of frames you have
 let currentFrame = 1;
-const duration = 7000; // Set the duration (in seconds) of the entire animation
+const duration = 3000; // Set the duration (in seconds) of the entire animation
 
 // Initialize ScrollMagic controller
 let controller = new ScrollMagic.Controller();
@@ -24,7 +24,7 @@ scene.on("update", e => {
 });
 
 setInterval(() => {
-    currentFrame = Math.round((scrollpos / 34.5)) + 1;
+    currentFrame = Math.round((scrollpos / 33)) + 1;
     console.log(`current frame should be ${currentFrame}`);
     if (currentFrame > frameCount) {
         currentFrame = frameCount;
@@ -33,7 +33,7 @@ setInterval(() => {
         currentFrame = 1;
     }
     animateFrames(currentFrame);
-}, 34.5);
+}, 33);
 
 function animateFrames(currentFrame) {
     var image = new Image();
@@ -42,7 +42,7 @@ function animateFrames(currentFrame) {
         context.drawImage(image, 0, 0);
     };
 
-    image.src = 'frames/frame_' + currentFrame + '.jpg';
+    image.src = 'frames/frame_' + currentFrame + '.webp';
 }
 
 // Resize the canvas to fill the browser window dynamically
